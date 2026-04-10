@@ -452,4 +452,4 @@ Each agent has its own workspace but shares NotebookLM auth via `~/.notebooklm/`
 
 - **notebooklm-py** by [Teng Lin](https://github.com/teng-lin/notebooklm-py) -- the library that makes this possible
 - **Original skill** by [RoboNuggets](https://robonuggets.com) -- CLI wrapper, headless refresh, slide generation
-- **Pro features** by [AI Injection](https://github.com/robertmilven) -- additional templates, pipeline integration, agent patterns
+- **Pro features** by [AI Injection](https://github.com/ainjection) -- additional templates, pipeline integration, agent patterns
