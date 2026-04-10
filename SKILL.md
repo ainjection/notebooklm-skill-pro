@@ -1,9 +1,11 @@
 ---
-name: notebooklm
-description: Query, manage, and automate Google NotebookLM from your AI agent. Add sources, generate slide decks with your brand colors, run research, and keep auth alive automatically.
+name: notebooklm-pro
+description: Query, manage, and automate Google NotebookLM from your AI agent. Add sources, generate branded slide decks, run research, export to video pipeline, and keep auth alive automatically.
+version: 2.0
+updated: 2026-04-10
 ---
 
-# NotebookLM Skill by RoboNuggets
+# NotebookLM Skill Pro - by AI Injection
 
 Connect your AI agent to Google NotebookLM. Add sources automatically, query your notebooks, generate branded slide decks, and keep your session alive without manual re-login.
 
@@ -288,7 +290,166 @@ Set `PYTHONUTF8=1` in your environment, or run `$env:PYTHONUTF8="1"` in PowerShe
 
 ---
 
+---
+
+## Additional Slide Prompt Templates (NEW in v2)
+
+### Clean Corporate (Light)
+
+```
+Create a [NUMBER]-slide professional deck for "[TITLE]."
+
+Design: Clean white background [BACKGROUND_COLOR]. Titles: bold sans-serif (Inter 800), color [PRIMARY_COLOR]. Body: Inter 300, color #333. Accent line under each title in [PRIMARY_COLOR]. One key data visualization or icon per slide. Minimal layout with generous whitespace. Bottom-right: small page number in [PRIMARY_COLOR].
+
+Slide 1: [DESCRIPTION]
+...
+```
+
+### Neon Tech (Dark)
+
+```
+Create a [NUMBER]-slide tech presentation for "[TITLE]."
+
+Design: Deep dark background [BACKGROUND_COLOR]. Titles: Space Grotesk 700, color [PRIMARY_COLOR] with subtle glow effect. Body: Space Grotesk 300, color #ccc. Each slide has a glowing neon accent line in [PRIMARY_COLOR]. Tech-inspired grid pattern in background at 5% opacity. Code snippets in monospace with [SECONDARY_COLOR] syntax highlighting.
+
+Slide 1: [DESCRIPTION]
+...
+```
+
+### Gradient Modern
+
+```
+Create a [NUMBER]-slide modern deck for "[TITLE]."
+
+Design: Dark gradient background from [BACKGROUND_COLOR] to #1a1a2e. Titles: Outfit 800, gradient text from [PRIMARY_COLOR] to [SECONDARY_COLOR]. Body: Outfit 300, color #aaa. Glassmorphism cards with blur backdrop and thin border. Rounded corners everywhere. Soft shadow depth.
+
+Slide 1: [DESCRIPTION]
+...
+```
+
+### AI Injection Default
+
+```
+Create a [NUMBER]-slide deck for "[TITLE]."
+
+Design: Black background #0a0a0a. Titles: bold, color #ff6600 (AI Injection orange). Body: light gray #aaa. Accent: #c8ff00 (lime green) for highlights and data. Cards: #111 background with #222 border. One icon or visual per slide. Clean, minimal, dark tech aesthetic.
+
+Slide 1: [DESCRIPTION]
+...
+```
+
+---
+
+## Content Pipeline Integration (NEW in v2)
+
+### NotebookLM to Video Pipeline
+
+Use NotebookLM as a research engine, then feed output into your video pipeline:
+
+1. **Create a notebook** for your video topic
+2. **Add sources** (YouTube URLs, articles, PDFs)
+3. **Query** to extract key points: `ask "Summarize the 5 most important points"`
+4. **Generate a report** as the base for your video script
+5. **Feed the report into your video pipeline** (Remotion, edge-tts, etc.)
+
+```bash
+# Step 1-3: Research
+python scripts/nlm.py create "AI Agents Video"
+python scripts/nlm.py add-source --notebook-id ID --url "https://youtube.com/watch?v=xxx"
+python scripts/nlm.py ask "What are the 5 key takeaways?" --notebook-id ID
+
+# Step 4: Generate script base
+python scripts/nlm.py generate-report --notebook-id ID --format blog_post
+
+# Step 5: Use the output as voiceover script input
+```
+
+### NotebookLM to Slide Deck to Video
+
+1. Generate slides in NotebookLM with your brand prompt
+2. Download the slides as images
+3. Use in Remotion as scene backgrounds with voiceover
+
+### Batch Research Workflow
+
+For content series, create one notebook per episode:
+
+```bash
+# Create notebooks for a 5-part series
+for i in 1 2 3 4 5; do
+  python scripts/nlm.py create "Series Part $i"
+done
+
+# Add the same base sources to all
+for ID in id1 id2 id3 id4 id5; do
+  python scripts/nlm.py add-source --notebook-id $ID --url "https://base-source.com"
+done
+```
+
+---
+
+## Report Format Reference (NEW in v2)
+
+All available report formats for `generate-report`:
+
+| Format | Output | Best for |
+|--------|--------|----------|
+| `study_guide` | Structured Q&A with key concepts | Learning content, courses |
+| `blog_post` | Long-form article | Video scripts, written content |
+| `briefing` | Executive summary | Quick overviews, meeting prep |
+| `faq` | Question and answer pairs | Help docs, community content |
+| `timeline` | Chronological events | History content, project updates |
+| `custom` | Your own prompt | Branded slides, specific formats |
+
+### Custom Format Tips
+
+- Keep custom prompts under 5,000 characters
+- Be specific about visual style (colors, fonts, layout)
+- Include per-slide descriptions for best results
+- Use the `--format custom --prompt "..."` flag
+
+---
+
+## Agent Integration Patterns (NEW in v2)
+
+### Cron: Daily Research Digest
+
+Add to your agent's cron registry to get daily research summaries:
+
+```json
+{
+  "id": "daily-research",
+  "name": "Daily research digest",
+  "cron": "0 9 * * *",
+  "prompt": "Query my active NotebookLM notebook for any new insights. Summarize the top 3 findings and send to my messaging channel.",
+  "enabled": true
+}
+```
+
+### Cron: Weekly Content Ideas
+
+```json
+{
+  "id": "weekly-content",
+  "name": "Weekly content ideas from research",
+  "cron": "0 10 * * 1",
+  "prompt": "Based on my NotebookLM sources, suggest 5 video ideas for this week. Include a one-line hook and target audience for each.",
+  "enabled": true
+}
+```
+
+### Multi-Agent Pattern
+
+- **Research Agent**: Manages NotebookLM notebooks, adds sources, runs queries
+- **Content Agent**: Takes research output, writes scripts, generates slides
+- **Production Agent**: Takes scripts and slides, renders videos with Remotion
+
+Each agent has its own workspace but shares NotebookLM auth via `~/.notebooklm/`.
+
+---
+
 ## Credits
 
-- **notebooklm-py** by [Teng Lin](https://github.com/teng-lin/notebooklm-py) — the library that makes this possible
-- **This skill** by [RoboNuggets](https://robonuggets.com) — CLI wrapper, headless refresh, slide generation workflow
+- **notebooklm-py** by [Teng Lin](https://github.com/teng-lin/notebooklm-py) -- the library that makes this possible
+- **Original skill** by [RoboNuggets](https://robonuggets.com) -- CLI wrapper, headless refresh, slide generation
+- **Pro features** by [AI Injection](https://github.com/robertmilven) -- additional templates, pipeline integration, agent patterns

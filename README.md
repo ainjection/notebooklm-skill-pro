@@ -1,8 +1,19 @@
-# NotebookLM Skill for Claude
+# NotebookLM Skill Pro
 
-Connect your Claude agent to Google NotebookLM. Add sources automatically, query your notebooks, generate branded slide decks, and keep your auth alive without manual re-login.
+Connect your Claude agent to Google NotebookLM. Add sources, query notebooks, generate branded slide decks, feed research into your video pipeline, and keep auth alive automatically.
 
-Built by [RoboNuggets](https://robonuggets.com). Powered by [notebooklm-py](https://github.com/teng-lin/notebooklm-py) by Teng Lin.
+Fork of [notebooklm-skill](https://github.com/robonuggets/notebooklm-skill) by RoboNuggets, enhanced by AI Injection. Powered by [notebooklm-py](https://github.com/teng-lin/notebooklm-py) by Teng Lin.
+
+## Improvements Over Original
+
+| Feature | Original | Pro v2 |
+|---------|----------|--------|
+| Slide templates | 1 (blackboard) | 4 (blackboard, corporate, neon tech, gradient modern) + AI Injection theme |
+| Pipeline integration | None | NotebookLM to video pipeline workflow |
+| Report formats | Basic | Full format reference with usage tips |
+| Agent patterns | None | Cron templates for daily research, weekly content ideas |
+| Multi-agent | None | Research/Content/Production agent pattern |
+| Batch workflows | None | Series research workflow for content batches |
 
 ---
 
